@@ -1,11 +1,10 @@
-# DeepCTR-Torch
+# DeepCTR-Torch 
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/deepctr-torch.svg)](https://pypi.org/project/deepctr-torch)
 [![Downloads](https://pepy.tech/badge/deepctr-torch)](https://pepy.tech/project/deepctr-torch)
 [![PyPI Version](https://img.shields.io/pypi/v/deepctr-torch.svg)](https://pypi.org/project/deepctr-torch)
 [![GitHub Issues](https://img.shields.io/github/issues/shenweichen/deepctr-torch.svg
 )](https://github.com/shenweichen/deepctr-torch/issues)
-
 
 [![Documentation Status](https://readthedocs.org/projects/deepctr-torch/badge/?version=latest)](https://deepctr-torch.readthedocs.io/)
 ![CI status](https://github.com/shenweichen/deepctr-torch/workflows/CI/badge.svg)
@@ -18,6 +17,27 @@ PyTorch version of [DeepCTR](https://github.com/shenweichen/DeepCTR).
 DeepCTR is a **Easy-to-use**,**Modular** and **Extendible** package of deep-learning based CTR models along with lots of core components layers which can be used to build your own custom model easily.You can use any complex model with `model.fit()`and `model.predict()` .Install through `pip install -U deepctr-torch`.
 
 Let's [**Get Started!**](https://deepctr-torch.readthedocs.io/en/latest/Quick-Start.html)([Chinese Introduction](https://zhuanlan.zhihu.com/p/53231955))
+
+## Experiment
+
+1. download and extract the [avazu dataset](), then put `train.csv` into `examples/`
+
+2. select data in the first 3 days:
+
+```
+cd examples/
+python 0_avazu_data_proc.py
+```
+
+3. run the models:
+
+`python 5avazu_test_l2_0.py`
+
+`python 6avazu_test_l2_1e-4.py`
+
+
+
+
 
 ## Models List
 
