@@ -20,7 +20,7 @@ Let's [**Get Started!**](https://deepctr-torch.readthedocs.io/en/latest/Quick-St
 
 ## Experiment
 
-1. download and extract the [avazu dataset](), then put `train.csv` into `examples/`
+1. download and extract the [avazu dataset](https://www.kaggle.com/c/avazu-ctr-prediction/data), then put `train.csv` into `examples/`
 
 2. select data in the first 3 days:
 
