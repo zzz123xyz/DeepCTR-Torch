@@ -1,11 +1,11 @@
 ## Experiment
 
-1. download and extract the [avazu dataset](https://www.kaggle.com/c/avazu-ctr-prediction/data), then put `train.csv` into `examples/`
+1. download and extract the [avazu dataset](https://www.kaggle.com/c/avazu-ctr-prediction/data), then put `train.csv` into `experiment/`
 
 2. select data in the first 3 days:
 
 ```
-cd examples/
+cd experiment/
 python 0_avazu_data_proc.py
 ```
 
