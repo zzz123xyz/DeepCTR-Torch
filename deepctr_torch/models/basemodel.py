@@ -96,6 +96,7 @@ class BaseModel(nn.Module):
 
         super(BaseModel, self).__init__()
         torch.manual_seed(seed)
+        self.base = lambda x: x  # required by NAS borrow from vgg16_lfov_bn_16_stages.py in MTLNAS
         self.dnn_feature_columns = dnn_feature_columns
 
         self.reg_loss = torch.zeros((1,), device=device)
@@ -196,9 +197,9 @@ class BaseModel(nn.Module):
             dataset=train_tensor_data, shuffle=shuffle, batch_size=batch_size)
 
         print(self.device, end="\n")
-        model = self.train()
-        loss_func = self.loss_func
-        optim = self.optim
+        model = self.train()  # here the basemodel and submodel such as deepfm initialized themselves !!!
+        loss_func = self.loss_func  # here the loss fun is determined !!!
+        optim = self.optim  # here the optim method is determined !!!
 
         sample_num = len(train_tensor_data)
         steps_per_epoch = (sample_num - 1) // batch_size + 1
