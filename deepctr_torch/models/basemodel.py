@@ -427,10 +427,13 @@ class BaseModel(nn.Module):
         if isinstance(optimizer, str):
             if optimizer == "sgd":
                 optim = torch.optim.SGD(self.parameters(), lr=0.01)
+                # optim = torch.optim.SGD(self.parameters(), lr=0.0001)
             elif optimizer == "adam":
-                optim = torch.optim.Adam(self.parameters())  # 0.001
+                optim = torch.optim.Adam(self.parameters(), lr=0.000001)  # 0.001
+                # optim = torch.optim.Adam(self.parameters())  # 0.001
             elif optimizer == "adagrad":
-                optim = torch.optim.Adagrad(self.parameters())  # 0.01
+                optim = torch.optim.Adagrad(self.parameters(), lr=0.000001)  # 0.01
+                # optim = torch.optim.Adagrad(self.parameters())  # 0.01
             elif optimizer == "rmsprop":
                 optim = torch.optim.RMSprop(self.parameters())
             else:

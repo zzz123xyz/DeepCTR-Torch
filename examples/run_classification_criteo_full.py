@@ -9,14 +9,16 @@ from deepctr_torch.inputs import SparseFeat, DenseFeat, get_feature_names
 from deepctr_torch.models import *
 
 if __name__ == "__main__":
-    data = pd.read_csv('./criteo_sample.txt')
-
     sparse_features = ['C' + str(i) for i in range(1, 27)]
     dense_features = ['I' + str(i) for i in range(1, 14)]
+    target = ['label']
+    header = target+dense_features+sparse_features
+
+    data = pd.read_csv('../../dataset/criteo-display-ad-challenge/train.txt',
+                       sep='\t', lineterminator='\r', names=header)
 
     data[sparse_features] = data[sparse_features].fillna('-1', )
     data[dense_features] = data[dense_features].fillna(0, )
-    target = ['label']
 
     # 1.Label Encoding for sparse features,and do simple Transformation for dense features
     for feat in sparse_features:
@@ -55,15 +57,11 @@ if __name__ == "__main__":
                    task='binary',
                    l2_reg_embedding=1e-5, device=device)
 
-    # model.compile("adagrad", "binary_crossentropy",
-    #               metrics=["binary_crossentropy", "auc"], )
-    model.compile("adam", "binary_crossentropy",
+    model.compile("adagrad", "binary_crossentropy",
                   metrics=["binary_crossentropy", "auc"], )
 
-    history = model.fit(train_model_input, train[target].values, batch_size=256, epochs=100, verbose=2,
+    history = model.fit(train_model_input, train[target].values, batch_size=32, epochs=100, verbose=2,
                         validation_split=0.2)
-    # history = model.fit(train_model_input, train[target].values, batch_size=32, epochs=100, verbose=2,
-    #                     validation_split=0.2)
     pred_ans = model.predict(test_model_input, 256)
     print("")
     print("test LogLoss", round(log_loss(test[target].values, pred_ans), 4))
