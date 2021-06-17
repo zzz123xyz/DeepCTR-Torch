@@ -1,3 +1,8 @@
+import os
+import sys
+sys.path.append('..')
+print(os.getcwd())
+
 import numpy as np
 import pandas as pd
 import torch
@@ -50,9 +55,7 @@ if __name__ == "__main__":
 
     # 2.count #unique features for each sparse field and generate feature config for sequence feature
 
-    fixlen_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=4)
-                              for feat in sparse_features]
-    fixlen_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=4)
+    fixlen_feature_columns = [SparseFeat(feat, all_data[feat].nunique(), embedding_dim=4)
                               for feat in sparse_features]
 
     varlen_feature_columns = [VarLenSparseFeat(SparseFeat('Genres', vocabulary_size=len(
@@ -74,15 +77,15 @@ if __name__ == "__main__":
     # 4.Define Model,compile and train
 
     device = 'cpu'
-    # use_cuda = True
-    use_cuda = False
+    use_cuda = True
+    # use_cuda = False
     if use_cuda and torch.cuda.is_available():
         print('cuda ready...')
         device = 'cuda:0'
 
     model = DeepFM(linear_feature_columns, dnn_feature_columns, task='regression', device=device)
-    # model.compile("adam", "mse", metrics=['mse'], )
-    model.compile("adagrad", "mse", metrics=['mse'], )
+    model.compile("adam", "mse", metrics=['mse'], )
+    # model.compile("adagrad", "mse", metrics=['mse'], )
     # history = model.fit(model_input, data[target].values, batch_size=256, epochs=100, verbose=2, validation_split=0.2)
     history = model.fit(model_input, data[target].values, batch_size=256, epochs=100, verbose=2,
                         validation_data=(model_val_input, val_data[target].values))

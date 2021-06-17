@@ -1,3 +1,8 @@
+import os
+import sys
+sys.path.append('..')
+print(os.getcwd())
+
 import numpy as np
 import pandas as pd
 import torch
@@ -22,11 +27,12 @@ if __name__ == "__main__":
     # ratio = 0.5
     ratio = 1
     # data = pd.read_csv("../../dataset/ml-1m/ratings_movies_users.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
-    data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_train_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
+    data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_08_random_train_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
     split_location = int(np.floor(ratio*len(data)))
     data = data.iloc[:split_location]
-    val_data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_val_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
-    test_data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_test_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
+    val_data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_01_random_val_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
+    test_data = pd.read_csv("../../dataset/ml-1m/ratings_movies_poster_users_01_random_test_binary_balance.csv").iloc[:, 1:] #add the .iloc[:, 1:] to drop first column
+    all_data = pd.concat([data, val_data, test_data])
     sparse_features = ["MovieId", "UserId",
                        "Gender", "Age", "Occupation", "Zip-code", ]
     target = ['Binary_rating']
@@ -34,25 +40,26 @@ if __name__ == "__main__":
     # 1.Label Encoding for sparse features,and process sequence features
     for feat in sparse_features:
         lbe = LabelEncoder()
-        data[feat] = lbe.fit_transform(data[feat])
-        val_data[feat] = lbe.fit_transform(val_data[feat])
-        test_data[feat] = lbe.fit_transform(test_data[feat])
+        all_data[feat] = lbe.fit_transform(all_data[feat])
+        data[feat] = lbe.transform(data[feat])
+        val_data[feat] = lbe.transform(val_data[feat])
+        test_data[feat] = lbe.transform(test_data[feat])
     # preprocess the sequence feature
 
     key2index = {}
-    genres_list = list(map(split, data['Genres'].values))
-    val_genres_list = list(map(split, val_data['Genres'].values))
-    test_genres_list = list(map(split, test_data['Genres'].values))
+    genres_list = list(map(split, all_data['Genres'].values))
     genres_length = np.array(list(map(len, genres_list)))
     max_len = max(genres_length)
     # Notice : padding=`post`
     genres_list = pad_sequences(genres_list, maxlen=max_len, padding='post', )
-    val_genres_list = pad_sequences(val_genres_list, maxlen=max_len, padding='post', )
-    test_genres_list = pad_sequences(test_genres_list, maxlen=max_len, padding='post', )
+    train_genres_list = genres_list[:len(data)]
+    val_genres_list = genres_list[len(data):len(data)+len(val_data)]
+    test_genres_list = genres_list[len(data)+len(val_data):]
+
 
     # 2.count #unique features for each sparse field and generate feature config for sequence feature
 
-    fixlen_feature_columns = [SparseFeat(feat, data[feat].nunique(), embedding_dim=4)
+    fixlen_feature_columns = [SparseFeat(feat, all_data[feat].nunique(), embedding_dim=4)
                               for feat in sparse_features]
 
     varlen_feature_columns = [VarLenSparseFeat(SparseFeat('Genres', vocabulary_size=len(
@@ -65,7 +72,7 @@ if __name__ == "__main__":
 
     # 3.generate input data for model
     model_input = {name: data[name] for name in sparse_features}  #
-    model_input["Genres"] = genres_list
+    model_input["Genres"] = train_genres_list
 
     model_val_input = {name: val_data[name] for name in sparse_features}  #
     model_val_input["Genres"] = val_genres_list

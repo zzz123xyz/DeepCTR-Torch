@@ -61,4 +61,6 @@ conda activate deepctr
 #python -u run_multivalue_amazon_movies_TV_8_1_1_binary_balance.py
 #python -u run_multivalue_movielens_1m_8_1_1_two_features_correct_lbecoder.py
 #python -u run_multivalue_movielens_1m_8_1_1_correct_lbeencoder.py
-python -u run_multivalue_movielens_1m_binary_balance_correct_lbeencoder.py
+#python -u run_multivalue_movielens_1m_binary_balance_correct_lbeencoder.py
+python -u run_multivalue_movielens_1m_8_1_1_two_features.py
+#python -u run_multivalue_movielens_1m_binary_balance.py

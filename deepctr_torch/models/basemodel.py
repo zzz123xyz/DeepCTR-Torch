@@ -236,6 +236,9 @@ class BaseModel(nn.Module):
                         reg_loss = self.get_regularization_loss()
 
                         total_loss = loss + reg_loss + self.aux_loss
+                        # print('loss:' + str(loss.detach().cpu().numpy()))
+                        # print('reg_loss:' + str(reg_loss.detach().cpu().numpy()))
+                        # print('aux_loss:' + str(self.aux_loss.detach().cpu().numpy()))
 
                         loss_epoch += loss.item()
                         total_loss_epoch += total_loss.item()
@@ -429,8 +432,8 @@ class BaseModel(nn.Module):
                 optim = torch.optim.SGD(self.parameters(), lr=0.01)
                 # optim = torch.optim.SGD(self.parameters(), lr=0.0001)
             elif optimizer == "adam":
-                optim = torch.optim.Adam(self.parameters(), lr=0.000001)  # 0.001
-                # optim = torch.optim.Adam(self.parameters())  # 0.001
+                # optim = torch.optim.Adam(self.parameters(), lr=0.000001)  # 0.001
+                optim = torch.optim.Adam(self.parameters())  # 0.001
             elif optimizer == "adagrad":
                 optim = torch.optim.Adagrad(self.parameters(), lr=0.000001)  # 0.01
                 # optim = torch.optim.Adagrad(self.parameters())  # 0.01
